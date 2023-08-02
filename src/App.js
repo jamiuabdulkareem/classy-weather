@@ -42,7 +42,7 @@ class App extends React.Component {
 
   // async fetchWeather() {
   fetchWeather = async () => {
-    if (this.state.location.length < 2) return;
+    if (this.state.location.length < 2) return this.setState({ weather: {} });
 
     try {
       this.setState({ isLoading: true });
@@ -80,12 +80,15 @@ class App extends React.Component {
   // useEffect []
   componentDidMount() {
     // this.fetchWeather();
+    this.setState({ location: localStorage.getItem("location") || "" });
   }
 
   // useEffect [location]
   componentDidUpdate(prevProps, prevState) {
     if (this.state.location !== prevState.location) {
       this.fetchWeather();
+
+      localStorage.setItem("location", this.state.location);
     }
   }
 
@@ -130,6 +133,10 @@ class Input extends React.Component {
 export default App;
 
 class Weather extends React.Component {
+  componentWillUnmount() {
+    console.log("unmount");
+  }
+
   render() {
     const {
       temperature_2m_max: max,
